@@ -11,7 +11,7 @@ class MathJaxProvider extends React.Component<*, *> {
         children: React.Node
     };
 
-    state: MathJaxContextValue;
+    state: MathJaxContextValue & {hasNodes: boolean};
 
     static defaultProps = {
         script:
@@ -30,7 +30,8 @@ class MathJaxProvider extends React.Component<*, *> {
 
         this.state = {
             MathJax: null,
-            registerNode: this.registerNode
+            registerNode: this.registerNode,
+            hasNodes: false
         };
     }
 
@@ -42,9 +43,6 @@ class MathJaxProvider extends React.Component<*, *> {
         this.load();
     }
 
-    // Is there any math nodes to typeset ?
-    hasNodes: boolean = false;
-
     // Have we already loaded MathJax ?
     loaded: boolean = false;
 
@@ -53,7 +51,7 @@ class MathJaxProvider extends React.Component<*, *> {
      * It will trigger the mathjax loading.
      */
     registerNode = () => {
-        this.hasNodes = true;
+        this.setState({hasNodes: true});
     };
 
     /*
@@ -62,7 +60,7 @@ class MathJaxProvider extends React.Component<*, *> {
     load = () => {
         const { script } = this.props;
 
-        if (this.loaded || !this.hasNodes) {
+        if (this.loaded || !this.state.hasNodes) {
             return;
         }
 
